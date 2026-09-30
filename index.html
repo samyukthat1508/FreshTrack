@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreshTrack | Smart Food Waste Reducer</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <div class="logo-icon">🍃</div>
+                <div>
+                    <h2>FreshTrack</h2>
+                    <span>Smart Pantry</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <p class="nav-heading">MENU</p>
+
+                <a href="#" class="nav-link active" data-section="dashboard">
+                    <span>▦</span> Dashboard
+                </a>
+
+                <a href="#" class="nav-link" data-section="pantry">
+                    <span>🧺</span> My Pantry
+                </a>
+
+                <a href="#" class="nav-link" data-section="use-first">
+                    <span>⏳</span> Use First
+                </a>
+
+                <a href="#" class="nav-link" data-section="recipes">
+                    <span>🍳</span> Recipe Suggestions
+                </a>
+
+                <a href="#" class="nav-link" data-section="analytics">
+                    <span>📊</span> Waste Analytics
+                </a>
+
+                <p class="nav-heading bottom-heading">OTHER</p>
+
+                <a href="#" class="nav-link" data-section="settings">
+                    <span>⚙️</span> Settings
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="eco-card">
+                    <span class="eco-icon">🌱</span>
+                    <div>
+                        <strong>Small steps matter!</strong>
+                        <p>Reduce waste, save money.</p>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <header class="topbar">
+                <div>
+                    <p class="greeting" id="currentDate"></p>
+                    <h1>Good evening, <span>there!</span> 👋</h1>
+                </div>
+
+                <div class="topbar-actions">
+                    <button class="icon-button" id="themeToggle" title="Toggle theme">🌙</button>
+
+                    <div class="profile">
+                        <div class="avatar">U</div>
+                        <div class="profile-info">
+                            <strong>My Pantry</strong>
+                            <span>Personal Account</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+
+            <!-- ================= DASHBOARD ================= -->
+            <section id="dashboard" class="page-section active-section">
+
+                <div class="section-header">
+                    <div>
+                        <h2>Overview</h2>
+                        <p>Here's what's happening in your pantry.</p>
+                    </div>
+
+                    <button class="primary-button" id="addFoodBtn">
+                        <span>+</span> Add Food Item
+                    </button>
+                </div>
+
+
+                <!-- Statistics -->
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <div class="stat-icon green">🧺</div>
+                            <span class="stat-label">TOTAL ITEMS</span>
+                        </div>
+                        <h3 id="totalItems">0</h3>
+                        <p class="stat-description">Items in your pantry</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <div class="stat-icon orange">⏰</div>
+                            <span class="stat-label">EXPIRING SOON</span>
+                        </div>
+                        <h3 id="expiringItems">0</h3>
+                        <p class="stat-description">Within the next 3 days</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <div class="stat-icon red">⚠️</div>
+                            <span class="stat-label">EXPIRED ITEMS</span>
+                        </div>
+                        <h3 id="expiredItems">0</h3>
+                        <p class="stat-description">Need your attention</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <div class="stat-icon blue">♻️</div>
+                            <span class="stat-label">WASTE SAVED</span>
+                        </div>
+                        <h3 id="wasteSaved">0 kg</h3>
+                        <p class="stat-description">This month</p>
+                    </div>
+
+                </div>
+
+
+                <!-- Dashboard Cards -->
+                <div class="dashboard-grid">
+
+                    <!-- Use First -->
+                    <div class="content-card use-first-card">
+
+                        <div class="card-header">
+                            <div>
+                                <h3>Use First</h3>
+                                <p>Items that need attention</p>
+                            </div>
+
+                            <button class="text-button" data-section-link="use-first">
+                                View all →
+                            </button>
+                        </div>
+
+                        <div id="useFirstPreview" class="food-list"></div>
+
+                    </div>
+
+
+                    <!-- Category Chart -->
+                    <div class="content-card">
+
+                        <div class="card-header">
+                            <div>
+                                <h3>Pantry Overview</h3>
+                                <p>Food by category</p>
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Recent Activity -->
+                <div class="content-card recent-card">
+
+                    <div class="card-header">
+                        <div>
+                            <h3>Recent Activity</h3>
+                            <p>Your latest pantry updates</p>
+                        </div>
+                    </div>
+
+                    <div id="recentActivity" class="activity-list"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= PANTRY ================= -->
+            <section id="pantry" class="page-section">
+
+                <div class="section-header">
+                    <div>
+                        <h2>My Pantry</h2>
+                        <p>Manage all your food items in one place.</p>
+                    </div>
+
+                    <button class="primary-button" id="addFoodBtnPantry">
+                        <span>+</span> Add Food Item
+                    </button>
+                </div>
+
+
+                <div class="toolbar">
+
+                    <div class="search-box">
+                        <span>🔍</span>
+                        <input type="text" id="searchInput" placeholder="Search food items...">
+                    </div>
+
+                    <select id="categoryFilter">
+                        <option value="all">All Categories</option>
+                        <option value="Dairy">Dairy</option>
+                        <option value="Fruits">Fruits</option>
+                        <option value="Vegetables">Vegetables</option>
+                        <option value="Grains">Grains</option>
+                        <option value="Bakery">Bakery</option>
+                        <option value="Meat">Meat</option>
+                        <option value="Beverages">Beverages</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Frozen Foods">Frozen Foods</option>
+                        <option value="Sauces">Sauces</option>
+                        <option value="Breakfast">Breakfast</option>
+                        <option value="Staples">Staples</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    <select id="statusFilter">
+                        <option value="all">All Status</option>
+                        <option value="fresh">Fresh</option>
+                        <option value="soon">Use Soon</option>
+                        <option value="today">Use Today</option>
+                        <option value="expired">Expired</option>
+                    </select>
+
+                </div>
+
+
+                <div id="pantryGrid" class="pantry-grid"></div>
+
+            </section>
+
+
+            <!-- ================= USE FIRST ================= -->
+            <section id="use-first" class="page-section">
+
+                <div class="section-header">
+                    <div>
+                        <h2>Use First</h2>
+                        <p>Prioritized items based on their expiry dates.</p>
+                    </div>
+                </div>
+
+                <div class="info-banner">
+                    <span>💡</span>
+                    <p>Use items marked <strong>Use Today</strong> first to help reduce food waste.</p>
+                </div>
+
+                <div id="useFirstGrid" class="pantry-grid"></div>
+
+            </section>
+
+
+            <!-- ================= RECIPES ================= -->
+            <section id="recipes" class="page-section">
+
+                <div class="section-header">
+                    <div>
+                        <h2>Recipe Suggestions</h2>
+                        <p>Make something delicious with what you already have.</p>
+                    </div>
+                </div>
+
+                <div class="info-banner">
+                    <span>🍳</span>
+                    <p>Recipes are matched with ingredients available in your pantry.</p>
+                </div>
+
+                <div class="recipe-toolbar">
+                    <div class="search-box">
+                        <span>🔍</span>
+                        <input type="search" id="recipeSearch" placeholder="Search recipes or ingredients...">
+                    </div>
+                    <select id="recipeFilter" aria-label="Filter recipes">
+                        <option value="all">All Recipes</option>
+                        <option value="quick">Quick Recipes</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="non-vegetarian">Non-Vegetarian</option>
+                        <option value="expiring">Using Expiring Items</option>
+                    </select>
+                </div>
+
+                <div id="recipeGrid" class="recipe-grid"></div>
+
+            </section>
+
+
+            <!-- ================= ANALYTICS ================= -->
+            <section id="analytics" class="page-section">
+
+                <div class="section-header">
+                    <div>
+                        <h2>Waste Analytics</h2>
+                        <p>Understand your food usage and waste patterns.</p>
+                    </div>
+                </div>
+
+                <div class="analytics-grid">
+
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div>
+                                <h3>Food Category Distribution</h3>
+                                <p>Current pantry composition</p>
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <canvas id="analyticsCategoryChart"></canvas>
+                        </div>
+                    </div>
+
+
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div>
+                                <h3>Monthly Waste Overview</h3>
+                                <p>Track your waste reduction journey</p>
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <canvas id="wasteChart"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="content-card">
+
+                    <div class="card-header">
+                        <div>
+                            <h3>Waste Reduction Tips</h3>
+                            <p>Simple habits that make a difference</p>
+                        </div>
+                    </div>
+
+                    <div class="tips-grid">
+
+                        <div class="tip-item">
+                            <span>📅</span>
+                            <div>
+                                <strong>Plan before shopping</strong>
+                                <p>Check your pantry before buying more food.</p>
+                            </div>
+                        </div>
+
+                        <div class="tip-item">
+                            <span>🥡</span>
+                            <div>
+                                <strong>Store food properly</strong>
+                                <p>Use suitable storage to extend freshness.</p>
+                            </div>
+                        </div>
+
+                        <div class="tip-item">
+                            <span>♻️</span>
+                            <div>
+                                <strong>Track what you waste</strong>
+                                <p>Learn which foods are most often discarded.</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= SETTINGS ================= -->
+            <section id="settings" class="page-section">
+
+                <div class="section-header">
+                    <div>
+                        <h2>Settings</h2>
+                        <p>Customize your FreshTrack experience.</p>
+                    </div>
+                </div>
+
+                <div class="content-card settings-card">
+
+                    <div class="setting-row">
+                        <div>
+                            <h3>Appearance</h3>
+                            <p>Switch between light and dark mode.</p>
+                        </div>
+
+                        <button class="secondary-button" id="settingsThemeToggle">
+                            Toggle Theme
+                        </button>
+                    </div>
+
+                    <div class="setting-row">
+                        <div>
+                            <h3>Clear Pantry Data</h3>
+                            <p>Remove all saved food items from this browser.</p>
+                        </div>
+
+                        <button class="danger-button" id="clearDataBtn">
+                            Clear Data
+                        </button>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+
+
+    <!-- ================= ADD FOOD MODAL ================= -->
+    <div class="modal-overlay" id="foodModal">
+
+        <div class="modal">
+
+            <div class="modal-header">
+                <div>
+                    <h2>Add Food Item</h2>
+                    <p>Enter the details of your food item.</p>
+                </div>
+
+                <button class="close-button" id="closeModal">×</button>
+            </div>
+
+
+            <form id="foodForm">
+
+                <div class="form-group">
+                    <label for="foodName">Food Name</label>
+                    <input type="text" id="foodName" name="name" placeholder="e.g., Milk, Apples, Bread" required>
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="foodCategory">Category</label>
+
+                        <select id="foodCategory" name="category" required>
+                            <option value="">Select category</option>
+                            <option value="Dairy">Dairy</option>
+                            <option value="Fruits">Fruits</option>
+                            <option value="Vegetables">Vegetables</option>
+                            <option value="Grains">Grains</option>
+                            <option value="Bakery">Bakery</option>
+                            <option value="Meat">Meat</option>
+                            <option value="Beverages">Beverages</option>
+                            <option value="Snacks">Snacks</option>
+                            <option value="Frozen Foods">Frozen Foods</option>
+                            <option value="Sauces">Sauces</option>
+                            <option value="Breakfast">Breakfast</option>
+                            <option value="Staples">Staples</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="foodQuantity">Quantity</label>
+                        <input type="number" id="foodQuantity" name="quantity" min="0" step="any" placeholder="e.g., 2" required>
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="foodUnit">Unit</label>
+                        <input type="text" id="foodUnit" name="unit" placeholder="e.g., kg, packet, pieces" required>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="expiryDate">Expiry Date</label>
+                        <input type="date" id="expiryDate" name="expiry" required>
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+                    <label for="foodLocation">Storage Location</label>
+
+                    <select id="foodLocation">
+                        <option value="Refrigerator">Refrigerator</option>
+                        <option value="Freezer">Freezer</option>
+                        <option value="Pantry Shelf">Pantry Shelf</option>
+                        <option value="Counter">Counter</option>
+                    </select>
+                </div>
+
+
+                <div class="modal-actions">
+                    <button type="button" class="secondary-button" id="cancelModal">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="primary-button">
+                        Add to Pantry
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="recipeModal" aria-hidden="true">
+        <div class="modal recipe-detail-modal">
+            <div class="modal-header">
+                <div>
+                    <h2 id="recipeModalTitle">Recipe</h2>
+                    <p id="recipeModalMeta"></p>
+                </div>
+                <button class="close-button" id="closeRecipeModal" type="button">×</button>
+            </div>
+            <div id="recipeModalContent"></div>
+        </div>
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
